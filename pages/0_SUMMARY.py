@@ -190,7 +190,7 @@ while True:
         st.session_state.total_invested = total_invested
         # col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
         # col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
-        col.dataframe(styled_res_individual_1, use_container_width = True)
+        col.dataframe(styled_res_individual_2, use_container_width = True)
         buy_head.subheader('Buy')
         buy_etf.dataframe(buy.sort_values('Down_LB%'), use_container_width=True)
         sell_head.subheader('Sell')
