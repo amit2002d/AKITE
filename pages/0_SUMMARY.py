@@ -159,7 +159,8 @@ while True:
             qty = math.ceil(amount / cmp)
             down_lb = round((cmp - last_buy)/last_buy * 100,2) if last_buy != 0 else 0
             lth = lifetime_high(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
-            if down_lb < 0 and pnl < 0 : # last buy se kitna neeche
+            # if down_lb < 0 and pnl < 0 : # last buy se kitna neeche
+            if down_lb < 0:
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
             elif last_buy == 0 and round((cmp - lth)/lth * 100,2) < 0 : # LTH se  kitna neeche
