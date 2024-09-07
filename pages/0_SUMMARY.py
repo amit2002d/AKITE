@@ -105,12 +105,12 @@ sum_title.title('Summary')
 # col1 = col[0].empty()
 # col2 = col[1].empty()
 col = st.empty()
-headings = st.columns(2)
-buy_head = headings[0].empty()
-sell_head = headings[1].empty()
-buy_sell = st.columns(2)
-buy_etf = buy_sell[0].empty()
-sell_etf = buy_sell[1].empty()
+# headings = st.columns(2)
+buy_head = st.empty()
+sell_head = st.empty()
+# buy_sell = st.columns(2)
+buy_etf = st.empty()
+sell_etf = st.empty()
 total_invested = 0
 total_current_value = 0
 while True:
@@ -176,7 +176,7 @@ while True:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
         resultant_df_round = sell.round(2)
         styled_res_df = resultant_df_round.style.format(format_dict2).apply(highlight_gain_condition3, subset=['Gain%'], axis=0)
-        investment_total = pd.concat([investment_total,pd.DataFrame({'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
+        investment_total = pd.concat([investment_total,pd.DataFrame({"ETF":[stock], 'CMP':[cmp],'Buy Avg':[buy_price], 'Qty':[(st.session_state.all_data[stock]['Qty.']).sum()],'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
         res_rounded = investment_total.round(2)
         res_individual_rounded = investment_individual.sort_values("ROI", ascending=False).round(2)
         res_individual_rounded_1 = res_individual_rounded.iloc[:len(res_individual_rounded)//2]
@@ -190,7 +190,7 @@ while True:
         st.session_state.total_invested = total_invested
         # col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
         # col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
-        col.dataframe(styled_res_individual_2, use_container_width = True)
+        # col.dataframe(styled_res_individual_2, use_container_width = True)
         buy_head.subheader('Buy')
         buy_etf.dataframe(buy.sort_values('Down_LB%'), use_container_width=True)
         sell_head.subheader('Sell')
