@@ -57,7 +57,7 @@ if st.button("Delete") and row_num > 0:
                 worksheet = spreadsheet.worksheet(selected_tab)
 
                 # Get all values as DataFrame
-                df = pd.DataFrame(worksheet.get_all_values(), columns=None, header = True)
+                df = pd.DataFrame(worksheet.get_all_values(head = 1), columns=None, header = True)
                 last_rows = df.head(int(row_num)).values.tolist()
                 print(last_rows)
                 for row in last_rows[1:]:
