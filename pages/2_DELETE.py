@@ -58,7 +58,7 @@ if st.button("Delete") and row_num > 0:
 
                 # Get all values as DataFrame
                 df = pd.DataFrame(worksheet.get_all_values(), columns=None)
-                last_rows = df.tail(int(row_num)).values.tolist()
+                last_rows = df.head(int(row_num)).values.tolist()
                 for row in last_rows:
                     try:
                         client = gspread.service_account_from_dict({
@@ -87,7 +87,7 @@ if st.button("Delete") and row_num > 0:
                     sheet.update(f"A{last_row_index}:J{last_row_index}", [data])
                     st.session_state.total_invested = st.session_state.total_invested - (float(row[1])*float(row[2]))
                     sheet.update(f"N{last_row_index}", [[50/int(row_num)]])
-                df = df[:-int(row_num)]
+                df = df[int(row_num):]
                 overwrite_worksheet_with_df(worksheet, df)
 
                 # Provide success message
