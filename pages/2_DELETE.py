@@ -59,6 +59,7 @@ if st.button("Delete") and row_num > 0:
                 # Get all values as DataFrame
                 df = pd.DataFrame(worksheet.get_all_values(), columns=None)
                 last_rows = df.head(int(row_num)).values.tolist()
+                print(last_rows)
                 for row in last_rows:
                     try:
                         client = gspread.service_account_from_dict({
