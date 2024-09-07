@@ -101,9 +101,10 @@ if 'total_invested' not in st.session_state:
 sum_title = st.empty()
 total_invested_place = st.empty()
 sum_title.title('Summary')
-col = st.columns(2)
-col1 = col[0].empty()
-col2 = col[1].empty()
+# col = st.columns(2)
+# col1 = col[0].empty()
+# col2 = col[1].empty()
+col = st.empty()
 headings = st.columns(2)
 buy_head = headings[0].empty()
 sell_head = headings[1].empty()
@@ -185,10 +186,11 @@ while True:
         styled_res_individual_1 = res_individual_rounded_1.style.format(format_dict).apply(highlight_gain_condition2,subset=['ROI'], axis=0)
         styled_res_individual_2 = res_individual_rounded_2.style.format(format_dict).apply(highlight_gain_condition2,subset=['ROI'], axis=0)
         total_invested_place.dataframe(styled_res)
-        numRows = len(res_individual_rounded)//2 if len(res_individual_rounded) >= 2 else 1
+        numRows = len(res_individual_rounded)//2
         st.session_state.total_invested = total_invested
-        col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
-        col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
+        # col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
+        # col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
+        col.dataframe(styled_res_individual_1, use_container_width = True)
         buy_head.subheader('Buy')
         buy_etf.dataframe(buy.sort_values('Down_LB%'), use_container_width=True)
         sell_head.subheader('Sell')
