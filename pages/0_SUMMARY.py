@@ -107,16 +107,17 @@ sum_title.title('Summary')
 col = st.empty()
 # headings = st.columns(2)
 buy_head = st.empty()
+buy_etf = st.empty()
+
 sell_head = st.empty()
 # buy_sell = st.columns(2)
-buy_etf = st.empty()
 sell_etf = st.empty()
 total_invested = 0
 total_current_value = 0
 while True:
     total_invested = 0
     total_current_value = 0
-    investment_total = pd.DataFrame(columns=['Total Investment','Current Value','ROI','Gain'])
+    investment_total = pd.DataFrame(columns=["ETF",'Buy Avg', 'Qty','CMP','Total Investment','Current Value','ROI','Gain'])
     investment_individual = pd.DataFrame(columns=["ETF",'Buy Avg', 'Qty','CMP', 'ROI','Gain','Total Investment','Current Value'])
     sell = pd.DataFrame(columns=['ETF', 'Price', 'Qty.', 'Age', 'CMP', 'Gain%', 'Amount'])
     buy = pd.DataFrame(columns=['ETF','Down%', 'Down_LB%',"LTH", 'Down_LTH%', 'CMP', 'LB','Amount', 'Qty'])
