@@ -88,7 +88,7 @@ if st.button("Delete") and row_num > 0:
                     sheet.update(f"A{last_row_index}:J{last_row_index}", [data])
                     st.session_state.total_invested = st.session_state.total_invested - (float(row[1])*float(row[2]))
                     sheet.update(f"N{last_row_index}", [[50/int(row_num)]])
-                df = df[0] + df[int(row_num)+1:]
+                df = df[int(row_num):]
                 overwrite_worksheet_with_df(worksheet, df)
 
                 # Provide success message
