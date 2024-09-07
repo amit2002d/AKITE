@@ -24,20 +24,15 @@ elif st.session_state.user == "Hemank":
     spreadsheet_id = secrets["connections"]["gsheets_h"]["spreadsheet"]
 
 def overwrite_worksheet_with_df(worksheet, df):
-    try:
-        worksheet.clear()
+    # Clear the worksheet and then update with new data
+    worksheet.clear()
+    worksheet.update([df.columns.tolist()] + df.values.tolist())
 
-        values = df.values.tolist()
-
-        worksheet.update("A1", values)
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
-
-# Main code
 if st.button("Delete") and row_num > 0:
     with st.spinner("Deleting..."):
         if st.session_state.user == 'Amit':
             try:
+                # Initialize gspread client
                 client = gspread.service_account_from_dict({
                     "type": secrets["connections"]["gsheets"]["type"],
                     "project_id": secrets["connections"]["gsheets"]["project_id"],
@@ -51,19 +46,27 @@ if st.button("Delete") and row_num > 0:
                     "client_x509_cert_url": secrets["connections"]["gsheets"]["client_x509_cert_url"]
                 })
 
-                # Open the spreadsheet
+                # Open the spreadsheet and fetch values
                 spreadsheet = client.open_by_key(spreadsheet_id)
-
                 worksheet = spreadsheet.worksheet(selected_tab)
                 values = worksheet.get_all_values()
+
+                # Extract header and data
                 header = values[0]
                 data = values[1:]
-                # Get all values as DataFrame
+
+                # Create DataFrame
                 df = pd.DataFrame(data, columns=header)
-                last_rows = df.head(int(row_num)).values.tolist()
-                for row in last_rows:
+
+                # Slice DataFrame to remove the top rows
+                df = df.iloc[int(row_num):]
+
+                # Process rows to be deleted
+                last_rows = df.head(int(row_num))
+                for row in last_rows.itertuples(index=False):
                     try:
-                        client = gspread.service_account_from_dict({
+                        # Open the second spreadsheet
+                        client_sell = gspread.service_account_from_dict({
                             "type": secrets["connections"]["gsheets_sell"]["type"],
                             "project_id": secrets["connections"]["gsheets_sell"]["project_id"],
                             "private_key_id": secrets["connections"]["gsheets_sell"]["private_key_id"],
@@ -76,27 +79,30 @@ if st.button("Delete") and row_num > 0:
                             "client_x509_cert_url": secrets["connections"]["gsheets_sell"]["client_x509_cert_url"]
                         })
                         spreadsheet_key = secrets["connections"]["gsheets_sell"]["spreadsheet"]
-                        sheet = client.open_by_key(spreadsheet_key).get_worksheet(0)
+                        sheet = client_sell.open_by_key(spreadsheet_key).get_worksheet(0)
                     except Exception as e:
                         st.error(f"An error occurred: {e}")
                         st.stop()
+                    
+                    # Prepare data for the second sheet
                     column_a_values = sheet.col_values(1)
                     last_row_index = len(column_a_values) + 1
                     date_obj = datetime.strptime(row[0], "%Y-%m-%d")
                     formatted_date = date_obj.strftime("%d-%b-%y")
-                    # formatted_date = datetime.strptime(formatted_date, "%d-%b-%y")
-                    data = [formatted_date,selected_tab,selected_tab, float(row[2]), float(row[1]), '',float(row[1])*float(row[2]),sell_price,str(datetime.now().strftime("%d-%b-%y")), st.session_state.total_invested - (float(row[1])*float(row[2]))]
+                    data = [formatted_date, selected_tab, selected_tab, float(row[2]), float(row[1]), '', float(row[1]) * float(row[2]), sell_price, str(datetime.now().strftime("%d-%b-%y")), st.session_state.total_invested - (float(row[1]) * float(row[2]))]
                     sheet.update(f"A{last_row_index}:J{last_row_index}", [data])
-                    st.session_state.total_invested = st.session_state.total_invested - (float(row[1])*float(row[2]))
-                    sheet.update(f"N{last_row_index}", [[50/int(row_num)]])
-                df = df[int(row_num):]
+                    st.session_state.total_invested -= float(row[1]) * float(row[2])
+                    sheet.update(f"N{last_row_index}", [[50 / int(row_num)]])
+
+                # Overwrite worksheet with updated DataFrame
                 overwrite_worksheet_with_df(worksheet, df)
 
                 # Provide success message
-                st.success(f"Deleted {row_num} rows successfully from the bottom of the worksheet '{selected_tab}'.")
+                st.success(f"Deleted {row_num} rows successfully from the top of the worksheet '{selected_tab}'.")
                 switch_page("app")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
+
         elif st.session_state.user == 'Deepti':
             try:
                 client = gspread.service_account_from_dict({
