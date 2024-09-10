@@ -101,23 +101,21 @@ if 'total_invested' not in st.session_state:
 sum_title = st.empty()
 total_invested_place = st.empty()
 sum_title.title('Summary')
-# col = st.columns(2)
-# col1 = col[0].empty()
-# col2 = col[1].empty()
-col = st.empty()
-# headings = st.columns(2)
-buy_head = st.empty()
-buy_etf = st.empty()
-
-sell_head = st.empty()
-# buy_sell = st.columns(2)
-sell_etf = st.empty()
+col = st.columns(2)
+col1 = col[0].empty()
+col2 = col[1].empty()
+headings = st.columns(2)
+buy_head = headings[0].empty()
+sell_head = headings[1].empty()
+buy_sell = st.columns(2)
+buy_etf = buy_sell[0].empty()
+sell_etf = buy_sell[1].empty()
 total_invested = 0
 total_current_value = 0
 while True:
     total_invested = 0
     total_current_value = 0
-    investment_total = pd.DataFrame(columns=["ETF",'Buy Avg', 'Qty','CMP','Total Investment','Current Value','ROI','Gain'])
+    investment_total = pd.DataFrame(columns=['Total Investment','Current Value','ROI','Gain'])
     investment_individual = pd.DataFrame(columns=["ETF",'Buy Avg', 'Qty','CMP', 'ROI','Gain','Total Investment','Current Value'])
     sell = pd.DataFrame(columns=['ETF', 'Price', 'Qty.', 'Age', 'CMP', 'Gain%', 'Amount'])
     buy = pd.DataFrame(columns=['ETF','Down%', 'Down_LB%',"LTH", 'Down_LTH%', 'CMP', 'LB','Amount', 'Qty'])
@@ -135,7 +133,7 @@ while True:
             up_df['CMP'] = round(get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock]),2)
             up_df['Gain%'] = round((((up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])) / (up_df['Price'] * up_df['Qty.'])) * 100,2)
             up_df['Amount'] = (up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])
-            filtered_rows = up_df[up_df['Gain%'] > 5] # sell gain condition
+            filtered_rows = up_df[up_df['Gain%'] > 3] # sell gain condition
             for etf_name in filtered_rows['ETF'].unique():
                 etf_rows = filtered_rows[filtered_rows['ETF'] == etf_name]
                 etf_rows.iloc[1:, 3] = ''  # Set ETF name to empty string for all rows except the first
@@ -153,7 +151,7 @@ while True:
             pnl = (cmp-buy_price)/buy_price if buy_price != 0 else 0
             multi_fac = -1*round(pnl*1000,2)
             if st.session_state.user == 'Amit' or st.session_state.user == "Deepti":
-                    amt = 10000
+                    amt = 35000
             else:
                 amt = 2500
             variable = 0
@@ -161,11 +159,10 @@ while True:
             qty = math.ceil(amount / cmp)
             down_lb = round((cmp - last_buy)/last_buy * 100,2) if last_buy != 0 else 0
             lth = lifetime_high(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
-            # if down_lb < 0 and pnl < 0 : # last buy se kitna neeche
-            if down_lb <= -2:
+            if down_lb <= -3 and pnl < 0: # last buy se kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
-            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) < 0 : # LTH se  kitna neeche
+            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -5: # LTH se  kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
             if buy.empty:
@@ -177,7 +174,7 @@ while True:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
         resultant_df_round = sell.round(2)
         styled_res_df = resultant_df_round.style.format(format_dict2).apply(highlight_gain_condition3, subset=['Gain%'], axis=0)
-        investment_total = pd.concat([investment_total,pd.DataFrame({"ETF":[stock], 'CMP':[cmp],'Buy Avg':[buy_price], 'Qty':[(st.session_state.all_data[stock]['Qty.']).sum()],'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
+        investment_total = pd.concat([investment_total,pd.DataFrame({'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
         res_rounded = investment_total.round(2)
         res_individual_rounded = investment_individual.sort_values("ROI", ascending=False).round(2)
         res_individual_rounded_1 = res_individual_rounded.iloc[:len(res_individual_rounded)//2]
@@ -189,9 +186,8 @@ while True:
         total_invested_place.dataframe(styled_res)
         numRows = len(res_individual_rounded)//2
         st.session_state.total_invested = total_invested
-        # col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
-        # col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
-        # col.dataframe(styled_res_individual_2, use_container_width = True)
+        col1.dataframe(styled_res_individual_1, use_container_width=True, height=(numRows + 1) * 35 + 3)
+        col2.dataframe(styled_res_individual_2, use_container_width=True, height=(numRows + 2) * 35 + 3)
         buy_head.subheader('Buy')
         buy_etf.dataframe(buy.sort_values('Down_LB%'), use_container_width=True)
         sell_head.subheader('Sell')
