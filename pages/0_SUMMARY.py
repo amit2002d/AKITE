@@ -140,7 +140,7 @@ while True:
                 sell = pd.concat([sell, etf_rows], ignore_index=True)
             st.session_state.all_data[stock]['Qty.'] = st.session_state.all_data[stock]['Qty.'].str.replace(',', '').astype(float) if st.session_state.all_data[stock]['Qty.'].dtype == 'object' else st.session_state.all_data[stock]['Qty.']
             cmp = get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
-            total_value =  ((st.session_state.all_data[stock]['Qty.']) * (st.session_state.all_data[stock]['Price']).astype(float)).sum() if not st.session_state.all_data[stock].empty else 0
+            total_value =  ((st.session_state.all_data[stock]['Qty.']) * (st.session_state.all_data[stock]['Price']).astype(float)).sum() if not st.session_state.all_data[stock].empty else 1
             total_invested += total_value
             current_value =  ((st.session_state.all_data[stock]['Qty.']) * cmp).sum() if not st.session_state.all_data[stock].empty else 0
             total_current_value += current_value
@@ -159,7 +159,7 @@ while True:
             qty = math.ceil(amount / cmp)
             down_lb = round((cmp - last_buy)/last_buy * 100,2) if last_buy != 0 else 0
             lth = lifetime_high(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
-            if down_lb <= -3 and pnl < 0: # last buy se kitna neeche
+            if down_lb <= -2 and pnl < 0: # last buy se kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
             elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -5: # LTH se  kitna neeche
