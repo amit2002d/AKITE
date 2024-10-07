@@ -162,7 +162,7 @@ while True:
             if down_lb <= -1 and pnl < 0: # last buy se kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
-            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -5: # LTH se  kitna neeche
+            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -1: # LTH se  kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
             if buy.empty:
