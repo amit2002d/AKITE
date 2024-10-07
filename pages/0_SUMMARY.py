@@ -151,7 +151,7 @@ while True:
             pnl = (cmp-buy_price)/buy_price if buy_price != 0 else 0
             multi_fac = -1*round(pnl*1000,2)
             if st.session_state.user == 'Amit' or st.session_state.user == "Deepti":
-                    amt = 10000
+                    amt = 50000
             else:
                 amt = 2500
             variable = 0
@@ -162,7 +162,7 @@ while True:
             if down_lb <= -1 and pnl < 0: # last buy se kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
-            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -1: # LTH se  kitna neeche
+            elif last_buy == 0 and round((cmp - lth)/lth * 100,2) <= -2: # LTH se  kitna neeche
                 new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], "Down_LTH%": [round((cmp - lth)/lth * 100,2)], "LTH": [lth], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
                 buy = pd.concat([buy,new_res],ignore_index=True)
             if buy.empty:
