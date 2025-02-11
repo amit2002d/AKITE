@@ -136,7 +136,7 @@ while True:
             filtered_rows = up_df[up_df['Gain%'] > 3] # sell gain condition
             for etf_name in filtered_rows['ETF'].unique():
                 etf_rows = filtered_rows[filtered_rows['ETF'] == etf_name]
-                etf_rows.iloc[1:, 3] = ''  # Set ETF name to empty string for all rows except the first
+                etf_rows.iloc[1:, 5] = ''  # Set ETF name to empty string for all rows except the first
                 sell = pd.concat([sell, etf_rows], ignore_index=True)
             st.session_state.all_data[stock]['Qty.'] = st.session_state.all_data[stock]['Qty.'].str.replace(',', '').astype(float) if st.session_state.all_data[stock]['Qty.'].dtype == 'object' else st.session_state.all_data[stock]['Qty.']
             cmp = get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
