@@ -151,7 +151,7 @@ while True:
             pnl = (cmp-buy_price)/buy_price if buy_price != 0 else 0
             multi_fac = -1*round(pnl*1000,2)
             if st.session_state.user == 'Amit' or st.session_state.user == "Deepti":
-                    amt = 10000
+                    amt = 35000
             else:
                 amt = 2500
             variable = 0
