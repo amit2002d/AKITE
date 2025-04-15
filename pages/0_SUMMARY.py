@@ -174,10 +174,14 @@ while True:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
         resultant_df_round = sell.round(2)
         # Ensure numerical columns are actually numeric
-        cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount']
+        cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount', 'Buy Value', 'Current Value']
         for col_name in cols_to_numeric:
             if col_name in sell.columns:
                 sell[col_name] = pd.to_numeric(sell[col_name], errors='coerce')  # Coerce will convert non-numeric to NaN
+        # Optional: Fill NaNs
+        sell[cols_to_numeric] = sell[cols_to_numeric].fillna(0)
+        # Format and style
+        resultant_df_round = sell.round(2)
         styled_res_df = resultant_df_round.style.format(format_dict2).apply(highlight_gain_condition3, subset=['Gain%'], axis=0)
         investment_total = pd.concat([investment_total,pd.DataFrame({'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
         res_rounded = investment_total.round(2)
