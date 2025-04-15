@@ -174,7 +174,7 @@ while True:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
         resultant_df_round = sell.round(2)
         # Ensure numerical columns are actually numeric
-        cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount', 'Buy Value', 'Current Value']
+        cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount']
         for col_name in cols_to_numeric:
             if col_name in sell.columns:
                 sell[col_name] = pd.to_numeric(sell[col_name], errors='coerce')  # Coerce will convert non-numeric to NaN
