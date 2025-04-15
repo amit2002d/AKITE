@@ -131,7 +131,7 @@ while True:
             up_df['Qty.'] = up_df['Qty.'].str.replace(',', '').astype(float) if up_df['Qty.'].dtype == 'object' else up_df['Qty.']
             up_df['Age'] = (datetime.datetime.now() - pd.to_datetime(up_df['Date'])).dt.days
             up_df['CMP'] = round(get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock]),2)
-            up_df['Gain%'] = float(round((((up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])) / (up_df['Price'] * up_df['Qty.'])) * 100,2))
+            up_df['Gain%'] = round((((up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])) / (up_df['Price'] * up_df['Qty.'])) * 100,2)
             up_df['Amount'] = (up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])
             filtered_rows = up_df[up_df['Gain%'] > 3] # sell gain condition
             for etf_name in filtered_rows['ETF'].unique():
@@ -173,6 +173,11 @@ while True:
         if not sell.empty:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
         resultant_df_round = sell.round(2)
+        # Ensure numerical columns are actually numeric
+        cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount']
+        for col_name in cols_to_numeric:
+            if col_name in sell.columns:
+                sell[col_name] = pd.to_numeric(sell[col_name], errors='coerce')  # Coerce will convert non-numeric to NaN
         styled_res_df = resultant_df_round.style.format(format_dict2).apply(highlight_gain_condition3, subset=['Gain%'], axis=0)
         investment_total = pd.concat([investment_total,pd.DataFrame({'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
         res_rounded = investment_total.round(2)
