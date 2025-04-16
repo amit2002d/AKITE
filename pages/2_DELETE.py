@@ -61,7 +61,7 @@ if st.button("Delete") and row_num > 0:
                 # Slice DataFrame to remove the top rows
 
                 # Process rows to be deleted
-                last_rows = df.head(int(row_num))
+                last_rows = df.tail(int(row_num))
                 for row in last_rows.itertuples(index=False):
                     try:
                         # Open the second spreadsheet
@@ -92,7 +92,7 @@ if st.button("Delete") and row_num > 0:
                     sheet.update(f"A{last_row_index}:J{last_row_index}", [data])
                     st.session_state.total_invested -= float(row[1]) * float(row[2])
                     sheet.update(f"N{last_row_index}", [[50 / int(row_num)]])
-                df = df.iloc[int(row_num):]
+                df = df.iloc[:-int(row_num)]
 
                 # Overwrite worksheet with updated DataFrame
                 overwrite_worksheet_with_df(worksheet, df)
