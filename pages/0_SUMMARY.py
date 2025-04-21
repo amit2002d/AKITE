@@ -173,7 +173,6 @@ while True:
         format_dict2 = {'Price': '{:.2f}', 'Qty.': '{:.2f}', 'CMP': '{:.2f}', 'Gain%': '{:.2f}', 'Amount': '{:.2f}'}
         if not sell.empty:
             sell.drop(columns=['Date'], axis = 1, inplace=True) 
-        resultant_df_round = sell.round(2)
         # Ensure numerical columns are actually numeric
         cols_to_numeric = ['Price', 'Qty.', 'CMP', 'Gain%', 'Amount']
         for col_name in cols_to_numeric:
