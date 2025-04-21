@@ -124,7 +124,7 @@ while True:
         stocks = list(st.session_state.all_data.keys())
         today = datetime.datetime.today().date()
         for stock in stocks:
-            time.sleep(5)
+            time.sleep(3)
             up_df = st.session_state.all_data[stock]
             up_df['ETF'] = [stock] * up_df.shape[0]
             up_df['Price'] = up_df['Price'].str.replace(',', '').astype(float) if up_df['Price'].dtype == 'object' else up_df['Price']
