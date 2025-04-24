@@ -119,7 +119,7 @@ while True:
     investment_individual = pd.DataFrame(columns=["ETF",'Buy Avg', 'Qty','CMP', 'ROI','Gain','Total Investment','Current Value'])
     sell = pd.DataFrame(columns=['ETF', 'Price', 'Qty.', 'Age', 'CMP', 'Gain%', 'Amount'])
     buy = pd.DataFrame(columns=['ETF','Down%', 'Down_LB%',"LTH", 'Down_LTH%', 'CMP', 'LB','Amount', 'Qty'])
-    if time.time() - st.session_state.last_analysis_time >= 2:
+    if time.time() - st.session_state.last_analysis_time >= 5:
         st.session_state.last_analysis_time = time.time()
         stocks = list(st.session_state.all_data.keys())
         today = datetime.datetime.today().date()
