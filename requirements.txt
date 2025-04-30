@@ -1,8 +1,8 @@
-chromedriver_autoinstaller
+beautifulsoup4
 gspread
 nsepython
 pandas
-selenium
+Requests
 streamlit
 streamlit_extras
 yfinance
