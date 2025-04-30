@@ -116,7 +116,8 @@ def lifetime_high(ticker):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     class1 = "P6K39c"
-    return float(soup.find_all(class_=class1)[2].text[13:].replace(',',''))
+    index = soup.find_all(class_=class1)[2].text.index('-')
+    return float(soup.find_all(class_=class1)[2].text[index + 3:].replace(',',''))
 
 
 
