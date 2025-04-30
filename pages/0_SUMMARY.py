@@ -133,7 +133,7 @@ while True:
             up_df['CMP'] = round(get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock]),2)
             up_df['Gain%'] = round((((up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])) / (up_df['Price'] * up_df['Qty.'])) * 100,2)
             up_df['Amount'] = (up_df['Qty.'] * up_df['CMP']) - (up_df['Price'] * up_df['Qty.'])
-            filtered_rows = up_df[up_df['Gain%'] > 3.14] # sell gain condition
+            filtered_rows = up_df[up_df['Gain%'] > 3] # sell gain condition
             for etf_name in filtered_rows['ETF'].unique():
                 etf_rows = filtered_rows[filtered_rows['ETF'] == etf_name]
                 etf_rows.loc[etf_rows.index[1:], 'ETF'] = ''  # Set ETF name to empty string for all rows except the first
