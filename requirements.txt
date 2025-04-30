@@ -5,3 +5,4 @@ yfinance==0.2.55
 gspread
 pandas
 streamlit_extras
+selenium

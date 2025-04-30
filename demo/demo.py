@@ -1,12 +1,12 @@
-import yfinance as yf
+from nsepython import *
 
-def get_cmp_price(cmp_symbol):
-    try:
-        cmp_data = yf.Ticker(cmp_symbol)
-        print(cmp_data)
-        cmp_price = cmp_data.history(period="1mo")["Close"]
-        return cmp_price
-    except Exception as e:
-        return None
+end_date = datetime.datetime.now().strftime("%d-%m-%Y")
+end_date = str(end_date)
 
-print(get_cmp_price("MSFT"))
+start_date = (datetime.datetime.now()- datetime.timedelta(days=65)).strftime("%d-%m-%Y")
+start_date = str(start_date)
+
+symbol = "SBIN"
+series = "EQ"
+
+df = equity_history(symbol,series,start_date,end_date)

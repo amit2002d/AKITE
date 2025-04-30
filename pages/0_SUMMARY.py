@@ -78,14 +78,42 @@ def highlight_single_gain(value):
         color = 'rgba(63, 255, 0,1)'  
     return 'background-color: %s' % color
 
-def get_cmp_price(cmp_symbol):
+# def get_cmp_price(cmp_symbol):
+#     try:
+#         cmp_data = yf.Ticker(cmp_symbol+".NS")
+#         cmp_price = cmp_data.history(period="1d")["Close"].iloc[-1]
+#         return cmp_price
+#     except Exception as e:
+#         st.error(f"Failed to fetch cmp price: {e}")
+#         return None
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+import time
+
+
+def get_cmp_price(symbol):
+    url = f"https://www.nseindia.com/get-quotes/equity?symbol={symbol.upper()}"
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("window-size=1200x600")
+    chrome_options.add_argument("user-agent=Mozilla/5.0")
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get(url)
+    time.sleep(5)
     try:
-        cmp_data = yf.Ticker(cmp_symbol+".NS")
-        cmp_price = cmp_data.history(period="1d")["Close"].iloc[-1]
-        return cmp_price
+        cmp_element = driver.find_element(By.ID, "quoteLtp")
+        cmp = cmp_element.text.strip().replace(",", "")
+        return float(cmp)
     except Exception as e:
-        st.error(f"Failed to fetch cmp price: {e}")
+        print(f"Error extracting CMP: {e}")
         return None
+    finally:
+        driver.quit()
+
     
 def lifetime_high(ticker_symbol):
     stock_data = yf.Ticker(ticker_symbol + ".NS")
