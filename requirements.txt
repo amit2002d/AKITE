@@ -1,10 +1,8 @@
-pandas==2.2.1
-python_dateutil==2.8.2
-streamlit==1.30.0
+chromedriver_autoinstaller==0.6.4
+gspread==6.2.0
+nsepython==1.5
+pandas==1.4.4
+selenium==4.31.0
+streamlit==1.45.0
+streamlit_extras==0.6.0
 yfinance==0.2.55
-gspread
-pandas
-streamlit_extras
-selenium
-chromium
-chromdriver-autoinstaller
