@@ -107,8 +107,18 @@ def get_cmp_price(ticker):
 
 #     return lifetime_high_price
 
-def lifetime_high(ticker_symbol):
-    return 100
+import requests
+from bs4 import BeautifulSoup
+
+
+def lifetime_high(ticker):
+    url = f'https://www.google.com/finance/quote/{ticker}:NSE'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    class1 = "P6K39c"
+    return float(soup.find_all(class_=class1)[2].text[13:].replace(',',''))
+
+
 
 if 'total_invested' not in st.session_state:
     st.session_state.total_invested = 0
