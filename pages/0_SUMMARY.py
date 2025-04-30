@@ -27,7 +27,6 @@ class ETFDashboard:
             st.session_state.last_analysis_time = time.time() - (REFRESH_INTERVAL + 10)
 
     def run(self) -> None:
-        self._setup_ui_containers()
         while True:
             if time.time() - st.session_state.last_analysis_time >= REFRESH_INTERVAL:
                 st.session_state.last_analysis_time = time.time()
