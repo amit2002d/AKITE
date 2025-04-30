@@ -87,44 +87,28 @@ def highlight_single_gain(value):
 #         st.error(f"Failed to fetch cmp price: {e}")
 #         return None
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import time
-import chromedriver_autoinstaller
-chromedriver_autoinstaller.install()
+import requests
+from bs4 import BeautifulSoup
 
 
+def get_cmp_price(ticker):
+    url = f'https://www.google.com/finance/quote/{ticker}:NSE'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    class1 = "YMlKec fxKbKc"
+    return float(soup.find(class_=class1).text[1:].replace(',',''))
 
-def get_cmp_price(symbol):
-    url = f"https://www.nseindia.com/get-quotes/equity?symbol={symbol.upper()}"
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("window-size=1200x600")
-    chrome_options.add_argument("user-agent=Mozilla/5.0")
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get(url)
-    time.sleep(5)
-    try:
-        cmp_element = driver.find_element(By.ID, "quoteLtp")
-        cmp = cmp_element.text.strip().replace(",", "")
-        return float(cmp)
-    except Exception as e:
-        print(f"Error extracting CMP: {e}")
-        return None
-    finally:
-        driver.quit()
 
-    
+# def lifetime_high(ticker_symbol):
+#     stock_data = yf.Ticker(ticker_symbol + ".NS")
+#     historical_prices = stock_data.history(period="max")["High"]
+
+#     lifetime_high_price = historical_prices.max()
+
+#     return lifetime_high_price
+
 def lifetime_high(ticker_symbol):
-    stock_data = yf.Ticker(ticker_symbol + ".NS")
-    historical_prices = stock_data.history(period="max")["High"]
-
-    lifetime_high_price = historical_prices.max()
-
-    return lifetime_high_price
+    return 0
 
 if 'total_invested' not in st.session_state:
     st.session_state.total_invested = 0
