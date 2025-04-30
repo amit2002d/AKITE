@@ -6,3 +6,5 @@ gspread
 pandas
 streamlit_extras
 selenium
+chromium
+Chromdriver-autoinstaller
