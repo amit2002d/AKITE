@@ -6,9 +6,9 @@ import yfinance as yf
 from datetime import datetime
 import math
 import datetime
-import toml
+# import toml
 from streamlit_extras.switch_page_button import switch_page
-secrets = toml.load('.streamlit/secrets.toml')
+# secrets = toml.load('.streamlit/secrets.toml')
 
 st.set_page_config(page_title="StockDash", page_icon="📈", layout="wide")
 if "secrets" not in st.session_state:
