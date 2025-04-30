@@ -108,7 +108,7 @@ def get_cmp_price(ticker):
 #     return lifetime_high_price
 
 def lifetime_high(ticker_symbol):
-    return 0
+    return 100
 
 if 'total_invested' not in st.session_state:
     st.session_state.total_invested = 0
