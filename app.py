@@ -10,7 +10,7 @@ import datetime
 from streamlit_extras.switch_page_button import switch_page
 # secrets = toml.load('.streamlit/secrets.toml')
 
-st.set_page_config(page_title="StockDash", page_icon="📈")
+st.set_page_config(page_title="StockDash", page_icon="📈", layout="wide")
 if "secrets" not in st.session_state:
     st.session_state.secrets = st.secrets
 # st.set_page_config(page_title="ETFDash", page_icon="📈", layout="wide")
