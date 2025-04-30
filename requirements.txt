@@ -3,6 +3,6 @@ gspread
 nsepython
 pandas
 Requests
-streamlit
+streamlit==1.24.0
 streamlit_extras
 yfinance

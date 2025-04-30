@@ -249,7 +249,7 @@ if user:
     summary_place = st.empty()
     total_place = st.empty()
     resultant_df_place = st.empty()
-    sum_title.title('Summary')
+    # sum_title.title('Summary')
     while True:
         total_invested = 0
         total_current_value = 0
