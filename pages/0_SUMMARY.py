@@ -11,7 +11,7 @@ import streamlit as st
 REFRESH_INTERVAL = 5  # seconds
 GAIN_THRESHOLD = 3.14  # percentage for sell condition
 DOWNSIDE_THRESHOLD = -3  # percentage for buy condition
-LTH_DOWNSIDE_THRESHOLD = -5  # percentage from lifetime high for buy condition
+LTH_DOWNSIDE_THRESHOLD = 5  # percentage from lifetime high for buy condition
 
 
 class ETFDashboard:
@@ -163,13 +163,16 @@ class ETFDashboard:
             self.secrets["connections"]["gsheets"]["worksheets"][stock])
         down_lb = round((processed_data['cmp'] - processed_data['last_buy_price']) /
                         processed_data['last_buy_price'] * 100, 2) if processed_data['last_buy_price'] != 0 else 0
-        down_lth = round((processed_data['cmp'] - lth) / lth * 100, 2)
+        down_lth = round((lth - processed_data['cmp']) / lth * 100, 2)
         amount = 35000 if st.session_state.user in ('Amit', 'Deepti') else 2500
         qty = math.ceil(
             amount / processed_data['cmp']) if processed_data['cmp'] != 0 else 0
+        
+        if stock == "MON100":
+            print(processed_data['cmp'], down_lb, down_lth)
 
         if (down_lb <= DOWNSIDE_THRESHOLD and processed_data['pnl'] < 0) or (
-                processed_data['last_buy_price'] == 0 and down_lth <= LTH_DOWNSIDE_THRESHOLD):
+                processed_data['last_buy_price'] == 0 and down_lth >= LTH_DOWNSIDE_THRESHOLD):
             new_entry = pd.DataFrame({
                 'ETF': [stock],
                 'Down%': [round(processed_data['pnl'] * 100, 2)],
