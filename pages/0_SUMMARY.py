@@ -78,7 +78,11 @@ class ETFDashboard:
 
         for stock, stock_data in st.session_state.all_data.items():
             if stock_data.empty:
-                continue
+                stock_data = pd.DataFrame([{
+                    "Date": datetime.now().strftime("%Y-%m-%d"),
+                    "Price": "1",
+                    "Qty.": "1"
+                }])
             time.sleep(5)
             processed_data = self._process_stock_data(stock, stock_data)
             sell_df = self._update_sell_recommendations(
