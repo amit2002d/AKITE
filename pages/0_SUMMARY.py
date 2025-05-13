@@ -85,6 +85,7 @@ class ETFDashboard:
 
             buy_df = self._update_buy_recommendations(
                 buy_df, stock, processed_data)
+            print(stock, processed_data)
             investment_individual = pd.concat([
                 investment_individual,
                 processed_data['individual_investment']
