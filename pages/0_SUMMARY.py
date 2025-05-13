@@ -80,7 +80,7 @@ class ETFDashboard:
             if stock_data.empty:
                 stock_data = pd.DataFrame([{
                     "Date": datetime.now().strftime("%Y-%m-%d"),
-                    "Price": "1",
+                    "Price": "0",
                     "Qty.": "1"
                 }])
             time.sleep(5)
