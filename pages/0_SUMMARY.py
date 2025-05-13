@@ -168,8 +168,7 @@ class ETFDashboard:
         qty = math.ceil(
             amount / processed_data['cmp']) if processed_data['cmp'] != 0 else 0
         
-        if stock == "MON100":
-            print(processed_data['cmp'], down_lb, down_lth)
+        print(stock, processed_data['cmp'], down_lb, down_lth)
 
         if (down_lb <= DOWNSIDE_THRESHOLD and processed_data['pnl'] < 0) or (
                 processed_data['last_buy_price'] == 0 and down_lth >= LTH_DOWNSIDE_THRESHOLD):
