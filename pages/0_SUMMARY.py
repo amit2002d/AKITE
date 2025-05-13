@@ -126,7 +126,7 @@ class ETFDashboard:
             processed_data['Price'] * processed_data['Qty.']
         )
         sell_candidates = processed_data[processed_data['Gain%']
-                                         > GAIN_THRESHOLD]
+                                         > GAIN_THRESHOLD and processed_data['Price'] > 0]
 
         total_value = processed_data['Qty.'].dot(processed_data['Price'])
         total_qty = processed_data['Qty.'].sum()
