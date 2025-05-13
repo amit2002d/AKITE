@@ -6,6 +6,10 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
+import warnings
+
+# Ignore all warnings
+warnings.filterwarnings("ignore")
 
 # Constants
 REFRESH_INTERVAL = 5  # seconds
