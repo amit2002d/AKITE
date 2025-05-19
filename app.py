@@ -6,28 +6,21 @@ import yfinance as yf
 from datetime import datetime
 import math
 import datetime
-# import toml
 from streamlit_extras.switch_page_button import switch_page
-# secrets = toml.load('.streamlit/secrets.toml')
-
-st.set_page_config(page_title="StockDash", page_icon="📈", layout="wide")
+# secrets = toml.load('secrets.toml')
 if "secrets" not in st.session_state:
     st.session_state.secrets = st.secrets
 # st.set_page_config(page_title="ETFDash", page_icon="📈", layout="wide")
 page_config_set = False
 
-
-# def set_page_config():
-#     global page_config_set
-#     if not page_config_set:
-#         st.set_page_config(page_title="StockDash",
-#                            page_icon="📈", layout="wide")
-#         page_config_set = True
-
+def set_page_config():
+    global page_config_set
+    if not page_config_set:
+        st.set_page_config(page_title="StockDash", page_icon="📈", layout="wide")
+        page_config_set = True
 
 # Call set_page_config function before any Streamlit code
-# set_page_config()
-
+set_page_config()
 
 def highlight_gain_condition(s):
     if s.name == 'ROI' or s.name == 'Gain':
@@ -37,11 +30,9 @@ def highlight_gain_condition(s):
     else:
         return s.apply(lambda x: highlight_2(x))
 
-
 def highlight_gain_condition2(s):
     if s.name == 'Gain%':
         return s.apply(lambda x: highlight_gain(x))
-
 
 def highlight_gain(x):
     if 3 < x <= 4:
@@ -50,24 +41,18 @@ def highlight_gain(x):
         color = 'rgba(63, 255, 0,1)'  # Green with 50% opacity
     return 'background-color: %s' % color
 
-
 def highlight(x):
     color = 'rgba(139,190,27,1)'
     return 'background-color: %s' % color
-
-
 def highlight_2(x):
     color = 'rgba(255, 140, 0, 1)'
     return 'background-color: %s' % color
-
-
 def highlight_single_gain(value):
     if value <= 0:
         color = 'rgba(255, 0, 0, 0.8)'
     else:
-        color = 'rgba(63, 255, 0,1)'
+        color = 'rgba(63, 255, 0,1)'  
     return 'background-color: %s' % color
-
 
 def fetch_data_from_google_sheets_d(_secrets):
     with st.spinner("Fetching data from Google Sheets..."):
@@ -85,22 +70,20 @@ def fetch_data_from_google_sheets_d(_secrets):
                 "client_x509_cert_url": _secrets["connections"]["gsheets_d"]["client_x509_cert_url"]
             })
             spreadsheet_key = _secrets["connections"]["gsheets_d"]["spreadsheet"]
-
+            
             all_data = {}
             for cmp_symbol in _secrets["connections"]["gsheets"]["worksheets"].values():
-                sheet = client.open_by_key(
-                    spreadsheet_key).worksheet(cmp_symbol)
+                sheet = client.open_by_key(spreadsheet_key).worksheet(cmp_symbol)
                 data = sheet.get_all_values()
                 df = pd.DataFrame(data)
                 df = pd.DataFrame(data[1:], columns=data[0])
                 all_data[cmp_symbol] = df
-            print(all_data)
+            
             return all_data
-
+        
         except Exception as e:
             st.error(f"An error occurred: {e}")
             st.stop()
-
 
 def fetch_data_from_google_sheets_m(_secrets):
     with st.spinner("Fetching data from Google Sheets..."):
@@ -118,22 +101,20 @@ def fetch_data_from_google_sheets_m(_secrets):
                 "client_x509_cert_url": _secrets["connections"]["gsheets_m"]["client_x509_cert_url"]
             })
             spreadsheet_key = _secrets["connections"]["gsheets_m"]["spreadsheet"]
-
+            
             all_data = {}
             for cmp_symbol in _secrets["connections"]["gsheets"]["worksheets"].values():
-                sheet = client.open_by_key(
-                    spreadsheet_key).worksheet(cmp_symbol)
+                sheet = client.open_by_key(spreadsheet_key).worksheet(cmp_symbol)
                 data = sheet.get_all_values()
                 df = pd.DataFrame(data)
                 df = pd.DataFrame(data[1:], columns=data[0])
                 all_data[cmp_symbol] = df
-
+            
             return all_data
-
+        
         except Exception as e:
             st.error(f"An error occurred: {e}")
             st.stop()
-
 
 def fetch_data_from_google_sheets_h(_secrets):
     with st.spinner("Fetching data from Google Sheets..."):
@@ -151,24 +132,21 @@ def fetch_data_from_google_sheets_h(_secrets):
                 "client_x509_cert_url": _secrets["connections"]["gsheets_h"]["client_x509_cert_url"]
             })
             spreadsheet_key = _secrets["connections"]["gsheets_h"]["spreadsheet"]
-
+            
             all_data = {}
             for cmp_symbol in _secrets["connections"]["gsheets"]["worksheets"].values():
-                sheet = client.open_by_key(
-                    spreadsheet_key).worksheet(cmp_symbol)
+                sheet = client.open_by_key(spreadsheet_key).worksheet(cmp_symbol)
                 data = sheet.get_all_values()
                 df = pd.DataFrame(data)
                 df = pd.DataFrame(data[1:], columns=data[0])
                 all_data[cmp_symbol] = df
-
+            
             return all_data
-
+        
         except Exception as e:
             st.error(f"An error occurred: {e}")
             st.stop()
-
-
-@st.cache_data(ttl=25200)
+@st.cache_data(ttl = 25200)
 def fetch_data_from_google_sheets(_secrets):
     with st.spinner("Fetching data from Google Sheets..."):
         try:
@@ -185,12 +163,11 @@ def fetch_data_from_google_sheets(_secrets):
                 "client_x509_cert_url": _secrets["connections"]["gsheets"]["client_x509_cert_url"]
             })
             spreadsheet_key = _secrets["connections"]["gsheets"]["spreadsheet"]
-
+            
             all_data = {}
             cnt = 0
             for cmp_symbol in _secrets["connections"]["gsheets"]["worksheets"].values():
-                sheet = client.open_by_key(
-                    spreadsheet_key).worksheet(cmp_symbol)
+                sheet = client.open_by_key(spreadsheet_key).worksheet(cmp_symbol)
                 data = sheet.get_all_values()
                 df = pd.DataFrame(data)
                 df = pd.DataFrame(data[1:], columns=data[0])
@@ -199,7 +176,7 @@ def fetch_data_from_google_sheets(_secrets):
                 if cnt % 15 == 0:
                     time.sleep(105)
             return all_data
-
+        
         except Exception as e:
             st.error(f"An error occurred: {e}")
             st.stop()
@@ -215,8 +192,8 @@ def get_cmp_price(cmp_symbol):
         return None
 
 
-user = st.selectbox("Select User", options=[
-                    None, 'Amit', 'Deepti', 'Mridul', 'Hemank'])
+
+user = st.selectbox("Select User",options = [None,'Amit','Deepti','Mridul','Hemank'])
 if 'all_data' not in st.session_state:
     st.session_state.all_data = 0
 if 'user' not in st.session_state:
@@ -249,16 +226,13 @@ if user:
     summary_place = st.empty()
     total_place = st.empty()
     resultant_df_place = st.empty()
-    # sum_title.title('Summary')
+    sum_title.title('Summary')
     while True:
         total_invested = 0
         total_current_value = 0
-        summary = pd.DataFrame(
-            columns=['ETF', 'Down%', 'Down_LB%', 'CMP', 'LB', 'Amount', 'Qty'])
-        investment = pd.DataFrame(
-            columns=['Total Investment', 'Current Value', 'ROI', 'Gain'])
-        resultant_df = pd.DataFrame(columns=[
-                                    'ETF', 'Price', 'Qty.', 'Buy Value', 'Age', 'CMP', 'Current Value', 'Gain%', 'Amount'])
+        summary = pd.DataFrame(columns=['ETF','Down%', 'Down_LB%', 'CMP', 'LB','Amount', 'Qty'])
+        investment = pd.DataFrame(columns=['Total Investment','Current Value','ROI','Gain'])
+        resultant_df = pd.DataFrame(columns=['ETF', 'Price', 'Qty.', 'Buy Value', 'Age', 'CMP', 'Current Value', 'Gain%', 'Amount'])
         if time.time() - st.session_state.last_analysis_time >= 0:
             st.session_state.last_analysis_time = time.time()
             stocks = list(st.session_state.all_data.keys())
@@ -267,79 +241,57 @@ if user:
                 time.sleep(1)
                 up_df = st.session_state.all_data[stock]
                 up_df['ETF'] = [stock] * up_df.shape[0]
-                up_df['Price'] = up_df['Price'].str.replace(',', '').astype(
-                    float) if up_df['Price'].dtype == 'object' else up_df['Price']
-                up_df['Qty.'] = up_df['Qty.'].str.replace(',', '').astype(
-                    float) if up_df['Qty.'].dtype == 'object' else up_df['Qty.']
+                up_df['Price'] = up_df['Price'].str.replace(',', '').astype(float) if up_df['Price'].dtype == 'object' else up_df['Price']
+                up_df['Qty.'] = up_df['Qty.'].str.replace(',', '').astype(float) if up_df['Qty.'].dtype == 'object' else up_df['Qty.']
                 up_df['Buy Value'] = up_df['Price'] * up_df['Qty.']
-                up_df['Age'] = (datetime.datetime.now() -
-                                pd.to_datetime(up_df['Date'])).dt.days
-                up_df['CMP'] = round(get_cmp_price(
-                    st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock]), 2)
+                up_df['Age'] = (datetime.datetime.now() - pd.to_datetime(up_df['Date'])).dt.days
+                up_df['CMP'] = round(get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock]),2)
                 up_df['Current Value'] = up_df['Qty.'] * up_df['CMP']
-                up_df['Gain%'] = round(
-                    ((up_df['Current Value'] - up_df['Buy Value']) / up_df['Buy Value']) * 100, 2)
+                up_df['Gain%'] = round(((up_df['Current Value'] - up_df['Buy Value']) / up_df['Buy Value']) * 100,2)
                 up_df['Amount'] = up_df['Current Value'] - up_df['Buy Value']
                 filtered_rows = up_df[up_df['Gain%'] > 3]
                 for etf_name in filtered_rows['ETF'].unique():
                     etf_rows = filtered_rows[filtered_rows['ETF'] == etf_name]
-                    # Set ETF name to empty string for all rows except the first
-                    etf_rows.iloc[1:, 3] = ''
-                    resultant_df = pd.concat(
-                        [resultant_df, etf_rows], ignore_index=True)
-                cmp = get_cmp_price(
-                    st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
+                    etf_rows.iloc[1:, 3] = ''  # Set ETF name to empty string for all rows except the first
+                    resultant_df = pd.concat([resultant_df, etf_rows], ignore_index=True)
+                cmp = get_cmp_price(st.session_state.secrets["connections"]["gsheets"]["worksheets"][stock])
                 # total_value =  ((st.session_state.all_data[stock]['Qty.'].str.replace(',','').astype(float)) * (st.session_state.all_data[stock]['Price']).astype(float)).sum() if not st.session_state.all_data[stock].empty else 0
-                total_value = ((st.session_state.all_data[stock]['Qty.']) * (st.session_state.all_data[stock]['Price']).astype(
-                    float)).sum() if not st.session_state.all_data[stock].empty else 0
+                total_value =  ((st.session_state.all_data[stock]['Qty.']) * (st.session_state.all_data[stock]['Price']).astype(float)).sum() if not st.session_state.all_data[stock].empty else 0
                 total_invested += total_value
-                current_value = ((st.session_state.all_data[stock]['Qty.']) * cmp).sum(
-                ) if not st.session_state.all_data[stock].empty else 0
+                current_value =  ((st.session_state.all_data[stock]['Qty.']) * cmp).sum() if not st.session_state.all_data[stock].empty else 0
                 total_current_value += current_value
-                total_qty = (st.session_state.all_data[stock]['Qty.']).sum(
-                ) if not st.session_state.all_data[stock].empty else 1
-                buy_price = round(total_value / total_qty, 2)
-                st.session_state.all_data[stock]['Price'] = pd.to_numeric(
-                    st.session_state.all_data[stock]['Price'], errors='coerce')
-                last_buy = st.session_state.all_data[stock].sort_values(
-                    'Date')['Price'].values[-1] if not st.session_state.all_data[stock].empty else 0
+                total_qty = (st.session_state.all_data[stock]['Qty.']).sum() if not st.session_state.all_data[stock].empty else 1
+                buy_price = round(total_value / total_qty,2)
+                st.session_state.all_data[stock]['Price'] = pd.to_numeric(st.session_state.all_data[stock]['Price'], errors='coerce')
+                last_buy = st.session_state.all_data[stock].sort_values('Date')['Price'].values[-1] if not st.session_state.all_data[stock].empty else 0
                 pnl = (cmp-buy_price)/buy_price if buy_price != 0 else 0
-                multi_fac = -1*round(pnl*1000, 2)
+                multi_fac = -1*round(pnl*1000,2)
                 num_of_investments = st.session_state.all_data[stock].shape[0]
                 if st.session_state.user == 'Amit' or st.session_state.user == "Deepti":
                     amt = 25000
                 else:
                     amt = 2500
-                variable = round((amt * multi_fac)/100, 2)
+                variable = round((amt * multi_fac)/100,2)
                 amount = int(amt + variable) if variable > 0 else 0
                 qty = math.ceil(amount / cmp)
-                down_lb = round((cmp - last_buy)/last_buy *
-                                100, 2) if last_buy != 0 else 0
+                down_lb = round((cmp - last_buy)/last_buy * 100,2) if last_buy != 0 else 0
                 if cmp < last_buy and pnl < 0:
-                    new_res = pd.DataFrame({'ETF': [stock], 'Down%': [round(pnl*100, 2)], 'Down_LB%': [
-                                           down_lb], 'CMP': [cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
-                    summary = pd.concat([summary, new_res], ignore_index=True)
+                    new_res = pd.DataFrame({'ETF': [stock], 'Down%':[round(pnl*100,2)], 'Down_LB%':[down_lb],'CMP':[cmp], 'Amount': [amount], 'Qty': [qty], 'LB': [last_buy]})
+                    summary = pd.concat([summary,new_res],ignore_index=True)
             if summary.empty:
-                total = 0
-
-            investment = pd.concat([investment, pd.DataFrame({'Total Investment': [total_invested], 'Current Value': [total_current_value], 'ROI': [round(
-                ((total_current_value - total_invested)/total_invested) * 100, 2)], 'Gain': [round(total_current_value - total_invested, 2)]})], ignore_index=True)
+                total = 0   
+            
+            investment = pd.concat([investment,pd.DataFrame({'Total Investment':[total_invested],'Current Value':[total_current_value],'ROI':[round(((total_current_value - total_invested)/total_invested) * 100,2)],'Gain':[round(total_current_value - total_invested,2)]})],ignore_index=True)
             res_rounded = investment.round(2)
-            format_dict = {'Total Investment': '{:.2f}',
-                           'Current Value': '{:.2f}', 'ROI': '{:.2f}', 'Gain': '{:.0f}'}
-            format_dict2 = {'Price': '{:.2f}', 'Qty.': '{:.2f}', 'CMP': '{:.2f}', 'Gain%': '{:.2f}',
-                            'Amount': '{:.2f}', 'Buy Value': '{:.2f}', 'Current Value': '{:.2f}'}
-            styled_res = res_rounded.style.format(
-                format_dict).apply(highlight_gain_condition, axis=0)
+            format_dict = {'Total Investment': '{:.2f}', 'Current Value': '{:.2f}', 'ROI': '{:.2f}', 'Gain': '{:.0f}'}
+            format_dict2 = {'Price': '{:.2f}', 'Qty.': '{:.2f}', 'CMP': '{:.2f}', 'Gain%': '{:.2f}', 'Amount': '{:.2f}', 'Buy Value': '{:.2f}', 'Current Value': '{:.2f}'}
+            styled_res = res_rounded.style.format(format_dict).apply(highlight_gain_condition, axis=0)
             total = summary['Amount'].sum()
             # total_invested_place.success('Total Invested: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + str(round(total_invested,2)) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 'Current Value: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + str(round(total_current_value)))
             total_invested_place.dataframe(styled_res)
             st.session_state.total_invested = total_invested
             summary_place.dataframe(summary.sort_values('Down_LB%'))
-            total_place.success(
-                'Total Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + str(total))
+            total_place.success('Total Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + str(total))
             resultant_df_round = resultant_df.round(2)
-            styled_res_df = resultant_df_round.style.format(format_dict2).apply(
-                highlight_gain_condition2, subset=['Gain%'], axis=0)
-            resultant_df_place.dataframe(
-                styled_res_df, use_container_width=True)
+            styled_res_df = resultant_df_round.style.format(format_dict2).apply(highlight_gain_condition2, subset=['Gain%'], axis=0)
+            resultant_df_place.dataframe(styled_res_df, use_container_width=True)
