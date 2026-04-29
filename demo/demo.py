@@ -1,12 +1,6 @@
-from nsepython import *
+import yfinance as yf
 
-end_date = datetime.datetime.now().strftime("%d-%m-%Y")
-end_date = str(end_date)
-
-start_date = (datetime.datetime.now()- datetime.timedelta(days=65)).strftime("%d-%m-%Y")
-start_date = str(start_date)
-
-symbol = "SBIN"
-series = "EQ"
-
-df = equity_history(symbol,series,start_date,end_date)
+cmp_data = yf.Ticker("NIFTYBEES"+".NS")
+cmp_price = cmp_data.history(period="1d")["Close"].iloc[-1]
+cmp_history = cmp_data.history(period="1d")
+print(cmp_history)
